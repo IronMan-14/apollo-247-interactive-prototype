@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apollo 247 — Interactive Prototype</title>
+<style>
+:root{--bg:#f4f7f7;--card:#fff;--ink:#1c2a2e;--mute:#566a70;--line:#d8e4e7;--teal:#0f6e77;--teal-d:#0b5159;--tint:#e7f0f0;--coral:#ff7a59;--ok:#1b7f4b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10181a;--card:#182326;--ink:#e8f0f1;--mute:#9db3b8;--line:#2b3c40;--tint:#1d3236}}
+*{box-sizing:border-box}html,body{margin:0}body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+.bar{background:#0b4f6c;color:#fff;padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:14px}
+.bar b{margin-right:auto}.seg{display:flex;border:1px solid #9fd1de;border-radius:8px;overflow:hidden}
+.seg button{background:transparent;color:#fff;border:0;padding:8px 14px;cursor:pointer;min-height:40px}
+.seg button.on{background:#ff7a59;color:#1c1c1a;font-weight:700}
+.note{font-size:13px;background:var(--tint);padding:8px 16px;color:var(--ink)}
+.app{max-width:1000px;margin:16px auto;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+header{display:flex;align-items:center;gap:16px;padding:12px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-weight:800;color:var(--teal);font-size:20px;cursor:pointer}
+nav{display:flex;gap:4px;flex:1;flex-wrap:wrap}
+nav button{background:none;border:0;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:600;min-height:44px}
+nav button:hover,nav button.cur{background:var(--tint);color:var(--teal)}
+.ic{position:relative;background:none;border:1px solid var(--line);border-radius:10px;width:44px;height:44px;cursor:pointer;display:grid;place-items:center}
+.ic svg{width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:1.8}
+.badge{position:absolute;top:-6px;right:-6px;background:var(--coral);color:#1c1c1a;border-radius:99px;font-size:12px;font-weight:700;min-width:20px;height:20px;display:grid;place-items:center;padding:0 5px}
+.pop{display:none;position:absolute;right:20px;top:68px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;width:280px;box-shadow:0 8px 24px rgba(0,0,0,.18);z-index:5;font-size:14px}
+.pop.show{display:block}
+main{padding:20px;min-height:520px;display:flex;flex-direction:column;gap:16px;position:relative}
+.screen{display:none;flex-direction:column;gap:16px}.screen.on{display:flex}
+h2{margin:0;font-size:22px}h3{margin:0 0 4px;font-size:16px}p{margin:0;color:var(--mute)}
+.banner{border-radius:14px;background:linear-gradient(120deg,#0b4f6c,#0f6e77);color:#fff;padding:28px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.v1 .banner{min-height:230px}.v2 .banner{min-height:96px;padding:16px 24px}
+.banner b{font-size:24px}.v2 .banner b{font-size:19px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--card);text-align:left;cursor:pointer;min-height:76px}
+.tile:hover{border-color:var(--teal);background:var(--tint)}
+.act{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:var(--tint);border-radius:12px;padding:12px 16px;flex-wrap:wrap}
+.act span{flex:1;min-width:180px}
+.v1 .order1{order:1}.v1 .order2{order:2}.v1 .order3{order:3}
+.v2 .order1{order:1}.v2 .order2{order:2}.v2 .order3{order:3}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:10px;padding:11px 20px;font-weight:700;cursor:pointer;min-height:44px}
+.btn:hover{background:var(--teal-d)}.btn.ghost{background:none;color:var(--teal);border:1.5px solid var(--teal)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.cat{height:84px;border:1px dashed var(--line);border-radius:10px;display:grid;place-items:center;color:var(--mute);font-size:13px}
+.row{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+select,input.f{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:11px 12px;min-height:44px}
+input.f{width:100%}input.f:focus,select:focus{outline:2px solid var(--teal);outline-offset:1px}
+.sortlbl{font-size:13px;color:var(--ok);font-weight:700}
+.doc{border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.av{width:52px;height:52px;border-radius:50%;background:var(--tint);display:grid;place-items:center;font-weight:800;color:var(--teal)}
+.doc div.i{flex:1;min-width:160px}.km{font-weight:700;color:var(--teal)}
+.form{display:grid;gap:14px;max-width:460px}label{font-size:14px;font-weight:600;display:grid;gap:6px}
+.dob{display:flex;gap:8px}.hint{font-size:13px;color:var(--mute);font-weight:400}
+.err{color:#b3261e;font-size:13px;font-weight:600;min-height:18px}
+.v2only{display:none}.v2 .v2only{display:block}.v1 .v1only{display:block}.v2 .v1only{display:none}
+.pay label{flex-direction:row;display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:12px;font-weight:500;min-height:44px}
+.done{text-align:center;padding:40px 10px}.done .tick{width:64px;height:64px;border-radius:50%;background:var(--ok);color:#fff;font-size:34px;display:grid;place-items:center;margin:0 auto 12px}
+.foot{padding:10px 20px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+#chips{display:none;gap:8px;flex-wrap:wrap}.v3 #chips{display:flex}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:9px 16px;min-height:44px;cursor:pointer;font-weight:600}
+.chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.v3 #sortwrap{display:none}
+.cartlbl{display:none}.v3 .cartb{display:flex;align-items:center;gap:6px;width:auto;padding:0 12px}.v3 .cartlbl{display:inline;font-weight:700;font-size:14px}
+.v3 .pay label:has(input:checked){border-color:var(--teal);background:var(--tint);font-weight:700}.v3 .pay label:has(input:checked)::after{content:"✓ Selected";margin-left:auto;color:var(--teal);font-size:13px}
+.v3 #actv2{border:2px solid var(--teal)}.v3 #actv2 span{font-size:16px}.v3 #actv2 .btn{padding:13px 22px}
+.v3 p,.v3 .hint{font-size:15px}
+@media(prefers-color-scheme:light){body.v3{--mute:#3f5258}}
+</style></head>
+<body class="v1">
+<div class="bar"><b>Apollo 247 — Interactive Prototype (Experiment 5)</b><span>Iteration:</span>
+<div class="seg" role="group" aria-label="Prototype version"><button id="b1" class="on" onclick="setV(1)">v1 — first build</button><button id="b2" onclick="setV(2)">v2 — after feedback</button><button id="b3" onclick="setV(3)">v3 — after testing</button></div></div>
+<div class="note" id="note"></div>
+<div class="app">
+<header>
+<span class="logo" onclick="go('home')">Apollo 24|7</span>
+<nav><button data-s="meds" onclick="go('meds')">Buy Medicines</button><button data-s="docs" onclick="go('docs')">Find Doctors</button><button data-s="labs" onclick="go('labs')">Lab Tests</button><button onclick="go('home')">Health Records</button></nav>
+<button class="ic cartb" aria-label="Cart" onclick="togglePop()"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 7H6.2"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg><span class="badge" id="cnt">1</span><span class="cartlbl">Cart</span></button>
+<button class="ic" aria-label="Account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4-6 8-6s7 1.5 8 6"/></svg></button>
+<div class="pop" id="pop"><h3>Your cart</h3><p id="popt">1 item: Paracetamol 650 Tablet — ₹23.70</p><p style="margin-top:8px">Cart stays visible on every page.</p></div>
+</header>
+<main>
+<section class="screen on" id="home">
+<div style="display:flex;flex-direction:column;gap:16px">
+<div class="banner order1"><b>Your full body checkup is FREE</b><span>if your report is 100% normal</span></div>
+<div class="tiles order2"><button class="tile" onclick="go('meds')"><h3>Buy Medicines</h3><p>2 hrs delivery</p></button><button class="tile" onclick="go('docs')"><h3>Doctor Appointment</h3><p>Book now</p></button><button class="tile" onclick="go('labs')"><h3>Lab Tests</h3><p>At home</p></button><button class="tile" onclick="toast('My Orders: 1 delivered order')"><h3>My Orders</h3><p>Orders &amp; bookings</p></button></div>
+<div class="act v2only order2" id="actv2"><span id="actt"><b>Last order:</b> Paracetamol 650 · delivered</span><button class="btn" id="actb" onclick="reorder()">Reorder</button></div>
+<div class="cats order3"><div class="cat">Devices</div><div class="cat">Vitamins</div><div class="cat">Pain relief</div><div class="cat">Baby care</div><div class="cat">Diabetes</div><div class="cat">Skin care</div></div>
+<div class="act v1only order3"><span><b>My Orders / Activity</b> — recent orders and bookings</span></div>
+</div></section>
+<section class="screen" id="docs">
+<h2>Best Online Doctors for ENT</h2>
+<div class="row"><span class="sortlbl" id="sl"></span><label id="sortwrap" style="display:flex;flex-direction:row;align-items:center;gap:8px">Sort by <select id="sort" onchange="renderDocs()"></select></label></div>
+<div id="chips"></div><div id="dl" style="display:grid;gap:10px"></div></section>
+<section class="screen" id="pt">
+<h2>Add Patient</h2><p id="who"></p>
+<div class="form">
+<label>First name<input class="f" id="fn" value="Rishit"></label>
+<label>Last name<input class="f" id="ln" value="C"></label>
+<label>Date of birth<div class="dob"><input class="f" id="dob" inputmode="numeric" maxlength="10" oninput="maskDob(this)"><button class="btn ghost" type="button" aria-label="Open calendar" onclick="openCal()">Calendar</button><input type="date" id="cal" style="position:absolute;opacity:0;pointer-events:none" onchange="fromCal(this)"></div><span class="hint v2only" id="hint">Format: DD/MM/YYYY — slashes are added for you</span></label>
+<div class="err" id="er"></div>
+<button class="btn" onclick="toPay()">Continue to payment</button></div></section>
+<section class="screen pay" id="pay"><h2>Payment</h2><p id="sum"></p>
+<label><input type="radio" name="m" checked> UPI</label><label><input type="radio" name="m"> Credit / Debit card</label><label><input type="radio" name="m"> Net banking</label>
+<button class="btn" style="max-width:260px" onclick="go('done')">Pay now</button></section>
+<section class="screen" id="done"><div class="done"><div class="tick">✓</div><h2>Consultation confirmed</h2><p id="dsum"></p><button class="btn" style="margin-top:16px" onclick="go('home')">Back to Home</button></div></section>
+<section class="screen" id="meds"><h2>Buy Medicines</h2><p>Search results (static in this prototype). The cart icon above stays in place.</p>
+<div class="doc"><div class="av">Rx</div><div class="i"><h3>Pacimol 650 Tablet</h3><p>15 tablets · ₹23.70</p></div><button class="btn" onclick="addCart()">Add to cart</button></div></section>
+<section class="screen" id="labs"><h2>Lab Tests</h2><p>Heart category (static in this prototype).</p>
+<div class="doc"><div class="av">LP</div><div class="i"><h3>Lipid Profile Test</h3><p>8 tests · ₹919</p></div><button class="btn" onclick="addCart()">Add</button></div></section>
+</main>
+<div class="foot" id="foot"></div>
+</div>
+<script>
+var V=1,D=[{n:"Dr. Gurleen Kaur",k:2.1,f:660},{n:"Dr. Major Bhaskar K",k:4.5,f:800},{n:"Dr. Sumeet Kaur",k:8.0,f:1200},{n:"Dr. Anil Rao",k:3.2,f:500},{n:"Dr. Meera Nair",k:6.4,f:950}],doc=D[0],cart=1,SORTS1=[["k","Nearest first"],["kd","Farthest first"]],SORTS2=[["k","Nearest first"],["f","Fee: low to high"],["kd","Farthest first"]],SORTS3=[["k","Nearest first"],["f","Lowest fee first"],["fd","Highest fee first"]];
+var NOTES={3:"v3 changes from usability testing: (1) fee sorting as visible one-tap chips with clearer labels, (2) live date-of-birth checking with an example and specific messages, (3) selected payment method highlighted, (4) clearer \u201CReorder Paracetamol 650\u201D strip, (5) Cart labelled in the header, larger and darker secondary text.",1:"v1: first high-fidelity build — persistent cart, working distance sort, typable DOB, activity tile below the fold.",2:"v2 changes from reviewer feedback: (1) DOB format hint + auto-slashes, (2) fee sort added beside distance, (3) shorter Home banner so activity shows without scrolling, (4) one-tap Reorder on Home."};
+function $(i){return document.getElementById(i)}
+function setV(n){V=n;document.body.className=n==3?"v2 v3":"v"+n;["b1","b2","b3"].forEach(function(b,i){$(b).className=n==i+1?"on":""});$("note").textContent=NOTES[n];fillSort();renderDocs();$("dob").placeholder=n==3?"e.g. 12/03/1989":n==2?"DD/MM/YYYY":"";$("hint").textContent=n==3?"Type the date as DD/MM/YYYY, for example 12/03/1989 — slashes are added for you":"Format: DD/MM/YYYY — slashes are added for you";$("actt").innerHTML=n==3?"<b>Buy again</b> — Paracetamol 650 · delivered 2 days ago":"<b>Last order:</b> Paracetamol 650 · delivered";$("actb").textContent=n==3?"Reorder Paracetamol 650":"Reorder";$("er").textContent="";}
+function go(s){document.querySelectorAll(".screen").forEach(function(e){e.classList.remove("on")});$(s).classList.add("on");document.querySelectorAll("nav button").forEach(function(b){b.classList.toggle("cur",b.dataset.s==s)});$("pop").classList.remove("show");if(s=="docs")renderDocs();}
+function fillSort(){var s=$("sort"),o=V==3?SORTS3:V==2?SORTS2:SORTS1;s.innerHTML=o.map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join("");$("chips").innerHTML=V==3?o.map(function(x){return '<button class="chip" data-v="'+x[0]+'" onclick="chip(\''+x[0]+'\')">'+x[1]+'</button>'}).join(""):"";}
+function renderDocs(){var m=$("sort").value,a=D.slice().sort(function(x,y){return m=="f"?x.f-y.f:m=="fd"?y.f-x.f:m=="kd"?y.k-x.k:x.k-y.k});var t=$("sort").options[$("sort").selectedIndex].text;$("sl").textContent="✓ Sorted by: "+t;$("dl").innerHTML=a.map(function(d,i){return '<div class="doc"><div class="av">'+d.n.split(" ")[1][0]+'</div><div class="i"><h3>'+d.n+'</h3><p>ENT Specialist · ₹'+d.f+'</p><span class="km">'+d.k.toFixed(1)+' km away</span></div><button class="btn" onclick="pick('+D.indexOf(d)+')">Consult</button></div>'}).join("");chipsOn();}
+function pick(i){doc=D[i];$("who").textContent="Booking with "+doc.n+" — online consult, ₹"+doc.f;go("pt");}
+function maskDob(el){if(V<2)return;var d=el.value.replace(/\D/g,"").slice(0,8),o=d;if(d.length>4)o=d.slice(0,2)+"/"+d.slice(2,4)+"/"+d.slice(4);else if(d.length>2)o=d.slice(0,2)+"/"+d.slice(2);el.value=o;if(V>=3)live(o);}
+function openCal(){var c=$("cal");c.style.pointerEvents="auto";try{c.showPicker()}catch(e){c.focus()}}
+function fromCal(c){if(!c.value)return;var p=c.value.split("-");$("dob").value=p[2]+"/"+p[1]+"/"+p[0];c.style.pointerEvents="none";}
+function toPay(){var v=$("dob").value.trim(),m=v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);var bad=dobMsg(v);if(bad){$("er").style.color="#b3261e";$("er").textContent=V>=3?bad:"Enter a valid date as DD/MM/YYYY";return}$("er").textContent="";$("sum").textContent=$("fn").value+" "+$("ln").value+" (DOB "+v+") · "+doc.n+" · ₹"+doc.f;$("dsum").textContent=doc.n+" will call "+$("fn").value+" shortly. Booking summary sent by SMS.";go("pay");}
+function dobMsg(v){var m=v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(!m)return"Use DD/MM/YYYY, for example 12/03/1989";var d=+m[1],mo=+m[2],y=+m[3];if(mo<1||mo>12)return"Month must be between 01 and 12";var dim=new Date(y,mo,0).getDate();if(d<1||d>dim)return"Day must be between 01 and "+dim+" for that month";if(y<1900)return"Year must be 1900 or later";if(new Date(y,mo-1,d)>new Date())return"Date of birth cannot be in the future";return""}
+function live(o){if(o.length<10){$("er").textContent="";return}var b=dobMsg(o);$("er").style.color=b?"#b3261e":"var(--ok)";$("er").textContent=b?b:"✓ Valid date"}
+function chipsOn(){document.querySelectorAll("#chips button").forEach(function(b){b.classList.toggle("on",b.dataset.v==$("sort").value)})}
+function chip(v){$("sort").value=v;renderDocs()}
+function addCart(){cart++;$("cnt").textContent=cart;toast("Added — cart now has "+cart+" items");}
+function reorder(){addCart();go("meds")}
+function togglePop(){$("popt").textContent=cart+" item"+(cart>1?"s":"")+" in cart";$("pop").classList.toggle("show")}
+function toast(t){$("foot").textContent=t;}
+setV(1);toast("Click through: Home → Find Doctors → Consult → Add Patient → Payment. Switch versions at the top to compare.");
+</script></body></html>
